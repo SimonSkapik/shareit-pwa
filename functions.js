@@ -3,7 +3,7 @@ var bcrypt = require('bcryptjs'),
     config = require('./config.js'); //config file contains all tokens and other private info
 
 // MongoDB connection information
-var mongodbUrl = 'mongodb://heroku_db_simon:123456abc@ds159188.mlab.com:59188/heroku_s0gd2j6w';
+var mongodbUrl = 'mongodb://user_simon:123456abc@ds159188.mlab.com:59188/heroku_s0gd2j6w';
 var MongoClient = require('mongodb').MongoClient
 var ObjectId = require('mongodb').ObjectID;
 
