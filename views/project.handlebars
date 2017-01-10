@@ -1,0 +1,290 @@
+<!-- views/home.handlebars -->
+
+{{#if user}}
+<div class="row">
+   <div class="col-xs-12 col-md-8">
+      <div class="row">
+         <div class="col-xs-12">
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                  <h3 class="panel-title">{{project_data.name}}</h3>
+                  {{#if isAdmin}}
+                  <div class="toolbar">
+                     <div class="toolbar-icon glyphicon glyphicon-remove" onclick="javascript:delete_project('{{prj_url}}');" ></div>
+                     <div class="toolbar-icon glyphicon glyphicon-edit" onclick="javascript:$('#edit_project_form').toggleClass('hidden');"  ></div>
+                     <label>Share with: </label>
+                     <input type="text" name="share-with" id="share_with" />
+                     <input type="button" name="share-prj" id="share_prj" value="Share" onclick="javascript:share_project($('#share_with').val(), '{{prj_url}}');" />
+                  </div>
+                  {{/if}}
+               </div>
+               <div class="collapse-form hidden" id="edit_project_form" style="border-bottom:1px solid grey;">
+                  <table class="full-width">
+                     <tbody>
+                        <tr>
+                           <th style="width:120px;">
+                              <label>Name:</label>
+                           </th>
+                           <td>
+                              <input class="full-width" type="text" name="edit-project-name" id="edit_project_name" value="{{project_data.name}}" />
+                              <input type="hidden" name="edit-project-url" id="edit_project_url" value="{{project_data.url_name}}" />
+                           </td>
+                        </tr>
+                        <tr>
+                           <th style="width:120px;">
+                              <label>Description</label>
+                           </th>
+                           <td>
+                              <textarea class="full-width" type="text" rows="5" name="edit-project-desc" id="edit_project_desc">{{project_data.description}}</textarea>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td colspan="2" class="text-right">
+                              <input type="button" name="edit-project" id="edit_project" value="Edit project" />
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+                </div>
+               <div class="panel-body scroll" id="project_description" style="height: 160px;">
+                  {{project_data.description}}
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-xs-12 col-md-8">
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                  <h3 class="panel-title">Notes</h3>
+                   <div class="toolbar">
+                     <div class="toolbar-icon glyphicon glyphicon-plus"onclick="javascript:$('#add_note_form').toggleClass('hidden');"  ></div>
+                   </div>
+               </div>
+               <div class="collapse-form hidden" id="add_note_form" style="border-bottom:1px solid grey;">
+                  <table class="full-width">
+                     <tbody>
+                        <tr>
+                           <th style="width:120px;">
+                              <label>Title:</label>
+                           </th>
+                           <td>
+                              <input class="full-width" type="text" name="add-note-title" id="add_note_title" value="" />
+                              <input type="hidden" name="add-note-number" id="add_note_number" value="" />
+                           </td>
+                        </tr>
+                        <tr>
+                           <th style="width:120px;">
+                              <label>Note</label>
+                           </th>
+                           <td>
+                              <textarea class="full-width" type="text" rows="5" name="add-note-body" id="add_note_body"></textarea>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td colspan="2" class="text-right">
+                              <input type="button" class="hidden" name="clear-edit-note" id="clear_edit_note" value="Cancel" />
+                              <input type="button" name="add-note" id="add_note" value="Add Note" />
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+                </div>
+               <div class="panel-body scroll full-width" id="project_notes" style="height: 400px;"></div>
+            </div>
+         </div>
+         <div class="col-xs-12 col-md-4">
+            <div class="panel panel-default">
+               <div class="panel-heading">
+                  <h3 class="panel-title">Images</h3>
+                  <div class="toolbar">
+                     <div class="toolbar-icon glyphicon glyphicon-plus"onclick="javascript:$('#add_image_form').toggleClass('hidden');"  ></div>
+                   </div>
+               </div>
+               <div class="panel-body hidden" id="add_image_form" style="border-bottom:1px solid grey;">
+                  <label>Title:</label><br />
+                  <input class="full-width" type="text" name="add-image-title" id="add_image_title" value="" /><br />
+                  <label>Description:</label><br />
+                  <textarea class="full-width" type="text" rows="3" name="add-image-desc" id="add_image_desc"></textarea><br />
+                  <input class="full-width" type="file" name="uploads[]" id="upload-input" value="" /><br />
+                  <button class="btn btn-lg upload-btn center" type="button">Upload File</button>
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar"></div>
+                  </div>
+                </div>
+               <div class="panel-body scroll" id="project_images" style="height: 400px;">
+
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   
+   <div class="col-xs-12 col-md-4">
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <h3 class="panel-title" >Conversation</h3>
+         </div>
+         <div id="project_conversation" class="panel-body scroll" style="height: 606px;">
+         </div>
+         <input type="text" name="txt-msg" id="txt_msg" value="" style="width:100%;padding:10px;" onkeypress="javascript:send_project_message(event, this, '{{prj_url}}');"/>
+      </div>
+   </div>
+</div>
+
+<div class="row">
+   <div class="col-xs-12">
+     <div class="panel panel-default">
+       <div class="panel-heading">
+         <h3 class="panel-title">Drawing board</h3>
+       </div>
+       <div class="panel-body" id="canvas_wrapper">
+         <div>
+            <label>Stroke Color: </label> <input type='text' class="hidden" id="draw_color" /> | 
+            <label>Fill Color: </label> <input type='text' class="hidden" id="fill_color" /> | 
+            <label>Shape: </label><select id="draw_shape">
+               <option selected="selected" value="0">Line</option>
+               <option value="1">Rectangle</option>
+               <option value="2">Elipsis</option>
+            </select> |
+            <label>Fill: </label><input type="checkbox" name="draw-fill" id="draw_fill" /> |
+            <label>LineWidth: </label><input type="number" min="1" max="20" value="2" name="draw-line-width" id="draw_line_width" />
+            
+         </div>
+         <canvas id="canvas" width="600px" height="600px"></canvas>
+       </div>
+     </div>
+   </div>
+</div>
+
+<script type="text/javascript">
+   canvas = document.getElementById('canvas');
+   ctx = canvas.getContext('2d');
+   local_data = {stroke_color:"#000", fill_color:"#f00", line_width : 2, shape:0, fill:false, start: {x:0,y:0}, stop: {x:0,y:0}};
+   
+   function emit(){
+      socket.emit('project', {prj_url:"{{prj_url}}"});
+   }
+   
+   function draw(draw_data){
+      ctx.fillStyle = draw_data.fill_color;
+      ctx.strokeStyle = draw_data.stroke_color;
+      ctx.lineWidth = draw_data.line_width;
+      switch(parseInt(draw_data.shape)){
+         case 0:{
+            ctx.beginPath();
+            ctx.moveTo(draw_data.start.x,draw_data.start.y);
+            ctx.lineTo(draw_data.stop.x,draw_data.stop.y);
+            ctx.closePath();
+            ctx.stroke();
+         }break;
+         case 1:{
+            if(draw_data.fill){
+               ctx.fillRect(draw_data.start.x,draw_data.start.y, draw_data.stop.x-draw_data.start.x, draw_data.stop.y-draw_data.start.y);
+            }
+            ctx.strokeRect(draw_data.start.x,draw_data.start.y, draw_data.stop.x-draw_data.start.x, draw_data.stop.y-draw_data.start.y);
+         }break;
+         case 2:{
+            ctx.beginPath();
+            ctx.ellipse(((draw_data.start.x+draw_data.stop.x)/2), ((draw_data.start.y+draw_data.stop.y)/2), Math.abs((draw_data.stop.x-draw_data.start.x)/2), Math.abs((draw_data.stop.y-draw_data.start.y)/2), 0, 0, 2 * Math.PI);
+            if(draw_data.fill){
+               ctx.fill();
+            }
+            ctx.closePath();
+            ctx.stroke();
+         }break;
+      }
+   }
+   
+   $(function(){
+
+      $("#draw_color").spectrum({
+         color: "#000",
+         preferredFormat: "hex",
+         hide: function(tinycolor) { local_data.stroke_color = (""+tinycolor).substring(0,7); }
+      });
+      
+      $("#fill_color").spectrum({
+         color: "#f00",
+         preferredFormat: "hex",
+         hide: function(tinycolor) { local_data.fill_color = (""+tinycolor).substring(0,7); }
+      });
+      
+      $('#canvas').attr('width', $('#canvas_wrapper').width());
+      
+      $('#draw_shape').change(function(){
+         local_data.shape = $(this).val();
+      });
+      
+      $('#draw_fill').change(function(){
+         if($(this).prop("checked") == true){
+            local_data.fill = true;
+         }else{
+            local_data.fill = false;
+         }
+      });
+   
+      $('#draw_line_width').change(function(){
+         local_data.line_width = parseInt($(this).val());
+      });
+      
+      $('#canvas').mousedown(function(e){
+         var mouseX, mouseY;
+
+          if(e.offsetX) {
+              mouseX = e.offsetX;
+              mouseY = e.offsetY;
+          }else if(e.layerX) {
+              mouseX = e.layerX;
+              mouseY = e.layerY;
+          }
+         local_data.start.x = mouseX;
+         local_data.start.y = mouseY;
+      });
+      
+      $('#canvas').mouseup(function(e){
+         var mouseX, mouseY;
+
+          if(e.offsetX) {
+              mouseX = e.offsetX;
+              mouseY = e.offsetY;
+          }else if(e.layerX) {
+              mouseX = e.layerX;
+              mouseY = e.layerY;
+          }
+         local_data.stop.x = mouseX;
+         local_data.stop.y = mouseY;
+         socket.emit('project', {prj_url : '{{prj_url}}', operation : "update", place : "drawing_board", data:local_data});
+      });
+      
+      socket.on('project-{{prj_url}}', function(data) {
+         if(data.operation == "update"){
+            if(data.place == "conversation"){
+               snippet_manager.invalidate_snippet("project_conversation");
+            }else if(data.place == "notes"){
+               snippet_manager.invalidate_snippet("project_notes");
+            }else if(data.place == "note_conversation"){
+               snippet_manager.invalidate_snippet('note_conversation_{{prj_url}}_'+data.data);
+            }else if(data.place == "images"){
+               snippet_manager.invalidate_snippet('project_images');
+            }else if(data.place == "drawing_board"){
+               draw(data.data);
+            }
+         }
+         //$('#project_conversation').append(msg);
+      });
+   
+      snippet_manager.new_location("project_conversation", "conversation", 'project_conversation', "/get_project_conversation", {prj_url : '{{prj_url}}'});
+      snippet_manager.invalidate_snippet("project_conversation");
+      
+      snippet_manager.new_location("project_notes", "notes", 'project_notes', "/get_project_notes", {prj_url : '{{prj_url}}'});
+      snippet_manager.invalidate_snippet("project_notes");
+      
+      snippet_manager.new_location("project_images", "images", 'project_images', "/get_project_images", {prj_url : '{{prj_url}}'});
+      snippet_manager.invalidate_snippet("project_images");
+   });
+   
+</script>
+{{else}}
+{{/if}}
+

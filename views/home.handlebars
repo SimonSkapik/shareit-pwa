@@ -1,0 +1,94 @@
+<!-- views/home.handlebars -->
+
+{{#if user}}
+<div class="col-xs-12 col-md-8">
+   <div class="row">
+     <div class="panel panel-default">
+       <div class="panel-heading">
+         <h3 class="panel-title">My Projects</h3>
+         <div class="toolbar">
+            <div class="toolbar-icon glyphicon glyphicon-plus" onclick="javascript:$('#project_form').toggleClass('hidden');" ></div>
+         </div>
+       </div>
+       <div class="panel-body hidden" id="project_form" style="border-bottom:1px solid grey;">
+         <table class="full-width">
+            <tbody>
+               <tr>
+                  <th style="width:120px;">
+                     <label>Name:</label>
+                  </th>
+                  <td>
+                     <input class="full-width" type="text" name="project-name" id="project_name" value="" />
+                  </td>
+               </tr>
+               <tr>
+                  <th>
+                     <label>Description</label>
+                  </th>
+                  <td>
+                     <textarea class="full-width" type="text" rows="5" name="project-desc" id="project_desc"></textarea>
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="2" class="text-right">
+                     <input type="button" name="project-create" id="project_create" value="Create Project" />
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+       </div>
+       <div class="panel-body" id="my_projects">
+         
+       </div>
+     </div>
+  </div>
+  <div class="row">
+     <div class="panel panel-default">
+       <div class="panel-heading">
+         <h3 class="panel-title">Shared Projects</h3>
+       </div>
+       <div class="panel-body" id="shared_projects">
+         
+       </div>
+     </div>
+  </div>
+</div>
+<div class="col-xs-12 col-md-4" style="height:calc(100vh - 250px);">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+         <h3 class="panel-title" style="text-align:center;">Public Chat</h3>
+      </div>
+      <div id="chat_window" style="border:1px solid #888;height:calc(100vh - 350px);overflow:auto;">
+
+      </div>
+      <input type="text" name="text" id="txt_text" value="" style="width:100%;padding:10px"/>
+      <!--<input type="button" name="send" id="btn_send" value="send" />-->
+   </div>
+</div>
+
+
+<script type="text/javascript">
+   $(function(){
+      snippet_manager.new_location("my_projects", "projects", 'my_projects', "/get_my_projects");
+      snippet_manager.new_location("shared_projects", "projects", 'shared_projects', "/get_shared_projects");
+      
+      snippet_manager.invalidate_snippet("my_projects");
+      snippet_manager.invalidate_snippet("shared_projects");
+   });
+</script>
+
+
+{{else}}
+  <div class="jumbotron">
+    <h1>MongoDB User Authentication</h1>
+    <p>Sign in and view your profile!</p>
+    <p>
+      <a href="/signin" class="btn btn-primary btn-lg" role="button">
+        <span class="glyphicon glyphicon-user"></span>
+        Sign in!
+      </a>
+    </p>
+  </div>
+
+{{/if}}
+

@@ -1,0 +1,17 @@
+<!-- views/home.handlebars -->
+
+{{#if user}}
+<div class="col-xs-12">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Profile Information</h3>
+    </div>
+    <div class="panel-body">
+      <p>Username: {{user.username}}</p>
+      <p>Color: <input type='text' class="hidden" id="color_picker" /></p>
+    </div>
+  </div>
+</div>
+{{else}}
+{{/if}}
+

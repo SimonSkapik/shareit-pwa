@@ -1,0 +1,242 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 22.8.2016, 9:53:03
+    Author     : jaroslav_sourek
+    
+    Content:
+    1) Basic formating
+    2) General
+    3) Page Content
+*/
+
+
+/* 
+*
+* 1) Basic formating
+*
+*/
+a,a:hover,a:active{
+   text-decoration:none;
+}
+
+textarea{
+   resize:none;
+}
+
+.hidden{
+	display:none;
+}
+.txt-left{
+	text-align:left;
+}
+.txt-center{
+	text-align:center;
+}
+.txt-right{
+	text-align:right;
+}
+.center{
+	margin:0 auto;
+}
+.full-width{
+	width:100%;
+}
+.half-width{
+	width:50%;
+}
+.v-align-top{
+	vertical-align:top;
+}
+.pointer{
+	cursor:pointer;
+}
+.color-black{
+	color:black;
+}
+.color-white{
+	color:white;
+}
+.color-alert{
+	color:#a60000;
+}
+.bold{
+	font-weight:bold;
+}
+.f-left{
+	float:left;
+}
+.f-right{
+	float:right;
+}
+.non-select{
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.no-resize{
+	resize: none;
+}
+.auto-width{
+	width:auto;
+}
+.scroll{
+   overflow:auto;
+}
+
+/* 
+*
+* 2) General
+*
+*/
+
+.alert{
+   padding:5px;
+   text-align:center;
+   margin: 10px auto -42px auto;
+   width:60%;
+}
+
+.toolbar{
+   float: right;
+   position: relative;
+   top: -20px;
+}
+
+.toolbar-img{
+   top: -30px;
+   left:-3px;
+}
+
+.toolbar-icon{
+   float: right;
+   position: relative;
+   background:#eee;
+   border: 1px solid grey;
+   width: 25px;
+   height: 25px;
+   padding: 4px 5px 6px 5px;
+   border-radius:3px;
+   cursor:pointer;
+   margin:0 0 -15px 5px;
+}
+
+.toolbar-icon:hover{
+   color:#428bca;
+   border-color:blue;
+   background:white;
+}
+
+.toolbar-icon:active{
+   top: 1px;
+   width:23px;
+   height:23px;
+   padding: 3px 4px 5px 4px;
+   font-size:0.95em;
+   margin:0 1px -13px 6px;
+}
+
+.row_link{
+   display:block;
+   overflow: hidden;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   background: #eeeeee;
+   padding: 5px 10px;
+   margin-bottom: 5px;
+   border-top: 1px solid #ccc;
+   border-bottom: 1px solid #ccc;
+   color: inherit;
+}
+
+.upload-btn{
+   display:block;
+}
+
+.progress{
+   margin:15px 0 0 0;
+}
+
+.panel-body{
+   width: 100% !important;
+   padding: 10px !important;
+}
+
+.collapse-form{
+   margin:0;
+   padding:5px;
+}
+
+/* 
+*
+* 3) Page Content
+*
+*/
+
+/* Notes >>>>>>>>>> */
+
+.note{
+  margin:5px;
+  border:1px solid #bbb;
+  border-radius:3px;
+  padding:5px;
+  background:#eee;
+}
+
+.note-heading{
+  margin:0;
+  padding:0;
+  border-bottom:1px solid #bbb;
+  height:30px;
+}
+
+.note-title{
+  margin:0;
+  padding:0;
+  font-size:16px;
+  line-height:18px;
+  position:relative;
+  top:5px;
+  left:5px;
+}
+
+.note-textline{
+  margin:0;
+  padding:0;
+  font-size:14px;
+  line-height:16px;
+  border-bottom:1px solid #bbb;
+}
+
+.note-body{
+  margin:0;
+  padding:3px;
+  border-bottom:1px solid #bbb;
+  background:#fff;
+}
+
+/* <<<<<<<<<< Notes */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

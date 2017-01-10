@@ -1,0 +1,331 @@
+<!-- views/layouts/main.handlebars -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="User Authentication">
+  <meta name="author" content="Simon Skapik">
+
+  <title>ShareIt</title>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" type="text/css" />
+  <link rel='stylesheet' href='/css/spectrum.css' type="text/css" />
+  <link rel="stylesheet" href="/css/custom.css" type="text/css" />
+
+  
+  
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+  <!-- Latest compiled and minified JavaScript -->
+  
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.1/moment.min.js"></script>
+  <script src='/js/spectrum.js'></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript">
+   socket = io();
+  </script>
+  <script src="/js/snippets.js"></script>
+</head>
+
+  <body>
+
+    <div class="container">
+
+      <nav class="navbar navbar-default" role="navigation" style="height:55px">
+         <div class="container-fluid">
+         {{#if error}}
+            <p class="alert alert-warning">{{error}}</p>
+          {{/if}}
+
+          {{#if success}}
+            <p class="alert alert-success">{{success}}</p>
+          {{/if}}
+
+          {{#if notice}}
+            <p class="alert alert-info">{{notice}}</p>
+          {{/if}}
+         <!-- Brand and toggle get grouped for better mobile display -->
+         <div class="navbar-header">
+           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+             <span class="sr-only">Toggle navigation</span>
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+           </button>
+         </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li>
+               
+              {{#if user}}
+                <p class="navbar-text">
+                  <a href="/" class="glyphicon glyphicon-home" title="Home"></a> | 
+                  <a href="/account" title="Account">
+                  <strong>Hi,</strong>
+                  <img src="/imgs/app/icon_acc.png" style="background:#{{user.color}};width:20px;height:20px;border-radius:5px;" />
+                  {{user.username}}
+                  </a>
+                </p>
+                </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                  <li>
+                    <a href="/logout">Log Out</a>
+                  </li>
+              {{else}}
+               </ul>
+                <ul class="nav navbar-nav navbar-right">
+                  <li><a href="/" class="glyphicon glyphicon-home" title="Home"></a> | 
+                <a href="/signin">Sign In</a>
+                </li>
+              {{/if}}
+              
+          </ul>
+          
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    
+    <div class="page-content jumbotron" style="min-height:calc(100vh - 160px);">
+
+       <!--where our other templates will insert-->
+       {{{body}}}
+     </div>
+    
+      <div class="navbar navbar-default" style="height:55px;margin-bottom:0;">
+         <div class="container-fluid">
+            Running on Node.js
+            Using passport.js for user authentication.
+         </div>
+       </div>
+    </div> <!-- /container -->
+   
+
+<script src="/js/upload.js"></script>
+   <script>
+
+      function send_msg(){
+         socket.emit('chat_message', {sender:"{{user.username}}",color:"{{user.color}}",msg:$('#txt_text').val()});
+         $('#txt_text').val('');
+      }
+      
+      function update_user(clr){
+         $.ajax({
+           type: "POST",
+           url: "/update_acc",
+           data: {color : clr},
+           dataType: "json",
+           success: function(data){
+              window.location.reload();
+           }
+         });
+      }
+      
+      function share_project(user_name, prj_url){
+         $.ajax({
+           type: "POST",
+           url: "/share_project",
+           data: {username : user_name, prj : prj_url},
+           dataType: "json",
+           success: function(data){
+              //window.location.reload();
+           }
+         });
+      }
+      
+      function delete_project(prj){
+         $.ajax({
+           type: "POST",
+           url: "/delete_project",
+           data: {prj_url : prj},
+           dataType: "json",
+           success: function(data){
+               window.location = "/";
+           }
+         });
+      }
+      
+      function send_project_message(e, input, prj){
+         e = e || window.event;
+         if (e.keyCode == 13) {
+            $.ajax({
+              type: "POST",
+              url: "/send_project_message",
+              data: {message : $(input).val(), prj_url : prj},
+              dataType: "json",
+              success: function(data){
+                 socket.emit('project', {prj_url : prj, operation : "update", place : "conversation", data:""});
+              }
+            });
+            $(input).val('');
+         }
+      }
+      
+      function send_note_comment(e, input, num, prj){
+         e = e || window.event;
+         if (e.keyCode == 13) {
+            $.ajax({
+              type: "POST",
+              url: "/send_note_comment",
+              data: {message : $(input).val(), note_number : num, prj_url : prj},
+              dataType: "json",
+              success: function(data){
+                 socket.emit('project', {prj_url : prj, operation : "update", place : "note_conversation", data : num});
+              }
+            });
+            $(input).val('');
+         }
+      }
+      
+      function edit_note(note_num, note_title, note_body){
+         $('#add_note_number').val(note_num);
+         $('#add_note_title').val(note_title);
+         $('#add_note_body').val(note_body);
+         $('#add_note_form').toggleClass('hidden');
+      }
+      
+      function add_image(img_name, prj){
+         $.ajax({
+           type: "POST",
+           url: "/add_image",
+           data: {img : img_name, prj_url : prj, title : $('#add_image_title').val(), desc : $('#add_image_desc').val()},
+           dataType: "json",
+           success: function(data){
+              $('#add_image_form').toggleClass('hidden');
+              $('#add_image_title').val('');
+              $('#add_image_desc').val('');
+              $('#upload-input').val('');
+              socket.emit('project', {prj_url : prj, operation : "update", place : "images", data : ""});
+           }
+         });
+      }
+      
+      function show_image(path, title, description){
+         var show = $('<div style="width:100%;height:calc(100vh);background:rgba(0,0,0,0.2);position:fixed;left:0;top:0;" onclick="javascript:$(this).remove();">\
+            <div style="max-width:70%; margin:100px auto;position:relative; text-align:center;background:#000;padding:10px 15px;border-radius:10px;color:white;">\
+               <h3>'+title+'</h3> \
+               <img src="/uploads/'+path+'" style="max-width:100%;"/>\
+               <p>'+description+'</p> \
+            </div> \
+         </div>');
+         $('body').append(show);
+      }
+ 
+      function delete_image(img_name, prj){
+         $.ajax({
+           type: "POST",
+           url: "/delete_image",
+           data: {img : img_name, prj_url : prj},
+           dataType: "json",
+           success: function(data){
+              socket.emit('project', {prj_url : prj, operation : "update", place : "images", data : ""});
+           }
+         });
+      }
+      
+      $(function(){
+         if($('#chat_window').length > 0){
+            $('#txt_text').keypress(function (e) {
+               if (e.which == 13) {
+                  send_msg();
+                  return false;
+               }
+            });
+
+            $('#btn_send').click(function(){
+               send_msg();
+               return false;
+            });
+              
+            socket.on('chat_message', function(message) {
+               var d = new Date();
+               var n = d.toLocaleTimeString().split(':');
+               var msg = '<div style="background:#'+message.color+';">['+n[0]+':'+n[1]+'] <b>'+message.sender+'</b>: '+message.message+'</div>';
+               $('#chat_window').append(msg);
+               $('#chat_window').scrollTop($('#chat_window').prop("scrollHeight"));
+            });
+
+         }
+         
+         $("#color_picker").spectrum({
+             color: "#{{user.color}}",
+             preferredFormat: "hex",
+             hide: function(tinycolor) { update_user((""+tinycolor).substring(1,7)) }
+         });
+         
+         $('#project_create').click(function (){
+            $.ajax({
+              type: "POST",
+              url: "/add_project",
+              data: {prj_name : $('#project_name').val(), prj_desc : $('#project_desc').val()},
+              dataType: "json",
+              success: function(data){
+                 $('#project_name').val('');
+                 $('#project_desc').val('');
+                 $('#project_form').toggleClass('hidden');
+                 snippet_manager.invalidate_snippet('my_projects');
+              }
+            });
+         });
+         
+         $('#edit_project').click(function (){
+            $.ajax({
+              type: "POST",
+              url: "/edit_project",
+              data: {prj_url : $('#edit_project_url').val(), prj_name : $('#edit_project_name').val(), prj_desc : $('#edit_project_desc').val()},
+              dataType: "json",
+              success: function(data){
+                 window.location.reload();
+              }
+            });
+         });
+         
+         
+         $('#add_note').click(function (){
+            if($('#add_note_number').val() == ""){
+               $.ajax({
+                 type: "POST",
+                 url: "/add_note",
+                 data: {prj_url : $('#edit_project_url').val(), title : $('#add_note_title').val(), body : $('#add_note_body').val()},
+                 dataType: "json",
+                 success: function(data){
+                    $('#add_note_title').val('');
+                    $('#add_note_body').val('');
+                    $('#add_note_form').toggleClass('hidden');
+                    snippet_manager.invalidate_snippet('project_notes');
+                    socket.emit('project', {prj_url : $('#edit_project_url').val(), operation : "update", place : "notes", data:""});
+                 }
+               });
+            }else{
+               $.ajax({
+                 type: "POST",
+                 url: "/edit_note",
+                 data: {prj_url : $('#edit_project_url').val(), number : $('#add_note_number').val(), title : $('#add_note_title').val(), body : $('#add_note_body').val()},
+                 dataType: "json",
+                 success: function(data){
+                    $('#add_note_number').val('')
+                    $('#add_note_title').val('');
+                    $('#add_note_body').val('');
+                    $('#add_note_form').toggleClass('hidden');
+                    snippet_manager.invalidate_snippet('project_notes');
+                    socket.emit('project', {prj_url : $('#edit_project_url').val(), operation : "update", place : "notes", data:""});
+                 }
+               });
+            }
+            
+         });
+      });
+      
+     
+   </script>
+</body>
+</html>

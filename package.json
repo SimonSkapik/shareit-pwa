@@ -1,0 +1,35 @@
+{
+  "name": "shareit",
+  "version": "0.1.0",
+  "description": "chat app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "chat",
+    "node.js"
+  ],
+  "author": "Simon Skapik",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^0.7.12",
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.14.0",
+    "express-handlebars": "^3.0.0",
+    "express-session": "^1.14.2",
+    "formidable": "^1.0.17",
+    "fs": "0.0.1-security",
+    "method-override": "^2.3.7",
+    "mongodb": "^2.2.19",
+    "morgan": "^1.7.0",
+    "passport": "^0.3.2",
+    "passport-facebook": "^1.0.3",
+    "passport-google": "^0.3.0",
+    "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.4",
+    "q": "^1.0.1",
+    "socket.io": "^1.7.2"
+  }
+}
